@@ -1,0 +1,6 @@
+{
+  "name": "ZippyView Task Manager",
+  "description": "A React application to display and manage project tasks for ZippyView, categorized by phases and sections, with progress tracking.",
+  "requestFramePermissions": [],
+  "prompt": ""
+}
