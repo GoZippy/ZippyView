@@ -7,7 +7,7 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "bot": "node src/discord/bot.js"
+    "bot": "tsx src/discord/bot.ts"
   },
   "dependencies": {
     "@google/generative-ai": "^0.2.0",
@@ -20,7 +20,9 @@
     "three": "^0.158.0",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
-    "zustand": "^4.4.7"
+    "zustand": "^4.4.7",
+    "tsx": "^4.7.0",
+    "zod": "^3.22.4"
   },
   "devDependencies": {
     "@types/d3": "^7.4.3",
