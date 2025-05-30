@@ -1,96 +1,94 @@
 import React, { useState } from 'react';
-import { supabase } from '../lib/supabase';
+import { videoGenerationSchema } from '@zippyview/shared';
 
-interface Props {
+interface VideoGeneratorProps {
   projectId: string;
-  onVideoGenerated: (videoUrl: string) => void;
+  onVideoGenerated: (url: string) => void;
 }
 
-export const VideoGenerator: React.FC<Props> = ({ projectId, onVideoGenerated }) => {
-  const [generating, setGenerating] = useState(false);
+export const VideoGenerator: React.FC<VideoGeneratorProps> = ({ projectId, onVideoGenerated }) => {
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [progress, setProgress] = useState(0);
 
-  const handleGenerateVideo = async () => {
-    setGenerating(true);
+  const handleGenerate = async () => {
+    setLoading(true);
     setError(null);
-    setProgress(0);
 
     try {
-      // Start the video generation process
-      const { data: jobData, error: jobError } = await supabase
-        .from('video_generation_jobs')
-        .insert([
-          {
-            project_id: projectId,
-            status: 'pending',
-            settings: {
-              duration: 30,
-              resolution: '1080p',
-              include_audio: true
-            }
-          }
-        ])
-        .select()
-        .single();
+      const settings = {
+        duration: 30,
+        resolution: '1080p' as const,
+        include_audio: true,
+      };
 
-      if (jobError) throw jobError;
+      const validatedData = videoGenerationSchema.parse({
+        projectId,
+        settings,
+      });
 
-      // Subscribe to job progress updates
-      const subscription = supabase
-        .channel(`job-${jobData.id}`)
-        .on('progress', payload => {
-          setProgress(payload.progress);
-        })
-        .on('completed', payload => {
-          onVideoGenerated(payload.video_url);
-          setGenerating(false);
-          subscription.unsubscribe();
-        })
-        .on('error', payload => {
-          setError(payload.error);
-          setGenerating(false);
-          subscription.unsubscribe();
-        })
-        .subscribe();
-
+      // TODO: Call video generation API endpoint
+      // For now, simulate with a timeout
+      await new Promise(resolve => setTimeout(resolve, 2000));
+      
+      onVideoGenerated('https://example.com/demo-video.mp4');
     } catch (err) {
-      setError(err.message);
-      setGenerating(false);
+      setError(err instanceof Error ? err.message : 'Failed to generate video');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className="bg-slate-800 rounded-lg p-6">
-      <h3 className="text-xl font-semibold mb-4">Project Visualization</h3>
+      <h2 className="text-2xl font-semibold mb-4">Generate Project Video</h2>
       
       <div className="space-y-4">
-        {generating && (
-          <div className="w-full bg-slate-700 rounded-full h-2">
-            <div 
-              className="bg-sky-500 h-2 rounded-full transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          </div>
+        <div>
+          <label className="block text-sm font-medium text-slate-300">Resolution</label>
+          <select
+            className="mt-1 block w-full rounded-md bg-slate-700 border-slate-600 text-white"
+            defaultValue="1080p"
+          >
+            <option value="720p">720p</option>
+            <option value="1080p">1080p</option>
+            <option value="4k">4K</option>
+          </select>
+        </div>
+
+        <div>
+          <label className="block text-sm font-medium text-slate-300">Duration</label>
+          <input
+            type="number"
+            className="mt-1 block w-full rounded-md bg-slate-700 border-slate-600 text-white"
+            defaultValue={30}
+            min={10}
+            max={300}
+          />
+        </div>
+
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            id="include-audio"
+            className="rounded bg-slate-700 border-slate-600 text-blue-500"
+            defaultChecked
+          />
+          <label htmlFor="include-audio" className="ml-2 text-sm text-slate-300">
+            Include background music
+          </label>
+        </div>
+
+        {error && (
+          <div className="text-red-500 text-sm">{error}</div>
         )}
 
         <button
-          onClick={handleGenerateVideo}
-          disabled={generating}
-          className={`w-full px-4 py-2 rounded-lg transition-colors ${
-            generating
-              ? 'bg-slate-600 cursor-not-allowed'
-              : 'bg-sky-500 hover:bg-sky-600'
-          }`}
+          onClick={handleGenerate}
+          disabled={loading}
+          className="w-full py-2 px-4 rounded-md bg-blue-500 hover:bg-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
         >
-          {generating ? `Generating (${progress}%)` : 'Generate Video'}
+          {loading ? 'Generating...' : 'Generate Video'}
         </button>
-
-        {error && (
-          <p className="text-red-500 text-sm mt-2">
-            Error: {error}
-          </p>
-        )}
       </div>
     </div>
   );
