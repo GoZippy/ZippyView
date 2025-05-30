@@ -12,6 +12,7 @@
     "@zippyview/shared": "workspace:*",
     "express": "^4.18.2",
     "fluent-ffmpeg": "^2.1.2",
+    "dotenv": "^16.3.1",
     "zod": "^3.22.4"
   },
   "devDependencies": {

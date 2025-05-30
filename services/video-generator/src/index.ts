@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import ffmpeg from 'fluent-ffmpeg';
 import { supabase } from '@zippyview/shared';
 import type { Database } from '@zippyview/shared/src/types/supabase';
