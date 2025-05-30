@@ -1,16 +1,18 @@
 import React from 'react';
 import { IdeaVisualizer } from './components/IdeaVisualizer';
 import { ProjectTimeline } from './components/ProjectTimeline';
+import { VideoGenerator } from './components/VideoGenerator';
+import { IdeaForm } from './components/IdeaForm';
 import { useIdeaStore } from './store/ideaStore';
 
 const App: React.FC = () => {
   const { ideas, loading, error, fetchIdeas } = useIdeaStore();
+  const [videoUrl, setVideoUrl] = useState<string | null>(null);
 
   React.useEffect(() => {
     fetchIdeas();
   }, [fetchIdeas]);
 
-  // Sample data for visualization
   const ideaNodes = ideas.map(idea => ({
     id: idea.id,
     name: idea.title,
@@ -24,15 +26,13 @@ const App: React.FC = () => {
     strength: 1
   })).filter(link => link.target);
 
-  // Sample commit data
   const sampleCommits = [
     {
       hash: '123abc',
       message: 'Initial commit',
       timestamp: '2024-01-01T12:00:00Z',
       author: 'Developer 1'
-    },
-    // Add more sample commits as needed
+    }
   ];
 
   if (loading) return <div className="flex items-center justify-center min-h-screen">Loading...</div>;
@@ -47,17 +47,35 @@ const App: React.FC = () => {
         <p className="text-slate-400 mt-2">Visualizing Hackathon Innovation</p>
       </header>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div className="bg-slate-800 rounded-lg p-6">
-          <h2 className="text-2xl font-semibold mb-4">Idea Galaxy</h2>
-          <IdeaVisualizer ideas={ideaNodes} links={ideaLinks} />
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
+          <div className="bg-slate-800 rounded-lg p-6">
+            <h2 className="text-2xl font-semibold mb-4">Idea Galaxy</h2>
+            <IdeaVisualizer ideas={ideaNodes} links={ideaLinks} />
+          </div>
+          
+          <div className="mt-6">
+            <ProjectTimeline commits={sampleCommits} />
+          </div>
+          
+          {videoUrl && (
+            <div className="mt-6 bg-slate-800 rounded-lg p-6">
+              <h2 className="text-2xl font-semibold mb-4">Generated Video</h2>
+              <video
+                src={videoUrl}
+                controls
+                className="w-full rounded-lg"
+              />
+            </div>
+          )}
         </div>
 
         <div className="space-y-6">
-          <div className="bg-slate-800 rounded-lg p-6">
-            <h2 className="text-2xl font-semibold mb-4">Project Activity</h2>
-            <ProjectTimeline commits={sampleCommits} />
-          </div>
+          <IdeaForm />
+          <VideoGenerator
+            projectId="demo"
+            onVideoGenerated={setVideoUrl}
+          />
         </div>
       </div>
     </div>
