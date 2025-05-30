@@ -1,0 +1,20 @@
+{
+  "name": "@zippyview/discord-bot",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@zippyview/shared": "workspace:*",
+    "discord.js": "^14.14.1",
+    "zod": "^3.22.4"
+  },
+  "devDependencies": {
+    "tsx": "^4.7.0",
+    "typescript": "~5.3.0"
+  }
+}

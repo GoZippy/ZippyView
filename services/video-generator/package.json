@@ -1,0 +1,20 @@
+{
+  "name": "@zippyview/video-generator",
+  "private": true,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js"
+  },
+  "dependencies": {
+    "@zippyview/shared": "workspace:*",
+    "fluent-ffmpeg": "^2.1.2"
+  },
+  "devDependencies": {
+    "@types/fluent-ffmpeg": "^2.1.24",
+    "tsx": "^4.7.0",
+    "typescript": "~5.3.0"
+  }
+}
