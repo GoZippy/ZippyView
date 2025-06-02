@@ -1,12 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { supabase } from '@zippyview/shared';
-import type { Database } from '@zippyview/shared/types/supabase';
+import { supabase } from '../lib/supabase';
 import { ProjectTimeline } from '../components/ProjectTimeline';
 import { VideoGenerator } from '../components/VideoGenerator';
 
-type Project = Database['public']['Tables']['github_projects']['Row'];
-type Commit = Database['public']['Tables']['commits']['Row'];
+interface Project {
+  id: string;
+  repo_url: string;
+  owner_username: string;
+  repo_name: string;
+  current_stats?: {
+    commit_count: number;
+    dev_count: number;
+    loc: number;
+  };
+}
+
+interface Commit {
+  id: string;
+  commit_hash: string;
+  author_id: string;
+  timestamp: string;
+  message: string;
+}
 
 export const ProjectView: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -21,7 +37,6 @@ export const ProjectView: React.FC = () => {
       if (!id) return;
 
       try {
-        // Fetch project details
         const { data: projectData, error: projectError } = await supabase
           .from('github_projects')
           .select('*')
@@ -31,7 +46,6 @@ export const ProjectView: React.FC = () => {
         if (projectError) throw projectError;
         setProject(projectData);
 
-        // Fetch commits
         const { data: commitsData, error: commitsError } = await supabase
           .from('commits')
           .select('*')
