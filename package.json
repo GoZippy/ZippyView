@@ -11,10 +11,15 @@
   "dependencies": {
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
+    "@supabase/auth-helpers-react": "^0.4.2",
+    "@supabase/auth-ui-react": "^0.4.6",
+    "@supabase/supabase-js": "^2.39.0",
+    "@zippyview/shared": "workspace:*",
     "d3": "^7.8.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-force-graph": "^1.44.0",
+    "react-router-dom": "^6.20.0",
     "three": "^0.158.0",
     "zustand": "^4.4.7"
   },
