@@ -121,4 +121,4 @@ export const ProjectView: React.FC = () => {
       </div>
     </div>
   );
-}
+};
