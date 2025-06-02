@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { supabase } from '@zippyview/shared';
-import type { Database } from '@zippyview/shared/src/types/supabase';
-import { ProjectTimeline } from '../../services/web/src/components/ProjectTimeline';
-import { VideoGenerator } from '../../services/web/src/components/VideoGenerator';
+import type { Database } from '@zippyview/shared/types/supabase';
+import { ProjectTimeline } from '../components/ProjectTimeline';
+import { VideoGenerator } from '../components/VideoGenerator';
 
 type Project = Database['public']['Tables']['github_projects']['Row'];
 type Commit = Database['public']['Tables']['commits']['Row'];
